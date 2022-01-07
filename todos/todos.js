@@ -6,7 +6,7 @@ import {
     logout,
     deleteAllTodos, 
 } from '../fetch-utils.js';
-import { renderTodo } from '../render-utils.js';
+// import { renderTodo } from '../render-utils.js';
 
 checkAuth();
 
@@ -27,23 +27,43 @@ todoForm.addEventListener('submit', async(e) => {
 
     todoForm.reset();
 
-    displayTodos();
+    await displayTodos();
 });
-// const todo = await getTodos();
-
-// todoForm.textContent = todo;
 
 async function displayTodos() {
     // fetch the todos
-    
-    // display the list of todos
+    const list = await getTodos();
 
-    // be sure to give each todo an event listener
+    todosEl.textContent = '';
+    // display the list of todos
+    for (let task of list) {
+        const taskElem = document.createElement('p');
+
+        taskElem.classList.add('task-item');
+        taskElem.textContent = `${task.task}`;
+
+        if (task.complete) {
+            taskElem.classList.add('complete');
+        } else {
+            taskElem.classList.add('incomplete');
+            // be sure to give each todo an event listener
+            taskElem.addEventListener('click', async() => {
+                await completeTodo(task.id);
+
+                displayTodos();
+            });
+        }
+
+        todosEl.append(taskElem);
+    }
 
     // on click, complete that todo
 }
 
 // add an on load listener that fetches and displays todos on load
+window.addEventListener('load', async() => {
+    await displayTodos();
+});
 
 logoutButton.addEventListener('click', () => {
     logout();
@@ -52,6 +72,7 @@ logoutButton.addEventListener('click', () => {
 
 deleteButton.addEventListener('click', async() => {
     // delete all todos
-
+    await deleteAllTodos();
     // then refetch and display the updated list of todos
+    await displayTodos();
 });
