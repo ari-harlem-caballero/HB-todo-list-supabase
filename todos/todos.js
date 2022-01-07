@@ -6,7 +6,7 @@ import {
     logout,
     deleteAllTodos, 
 } from '../fetch-utils.js';
-import { renderTodo } from '../render-utils.js';
+// import { renderTodo } from '../render-utils.js';
 
 checkAuth();
 
@@ -33,7 +33,7 @@ todoForm.addEventListener('submit', async(e) => {
 async function displayTodos() {
     // fetch the todos
     const list = await getTodos();
-    console.log(list);
+
     todosEl.textContent = '';
     // display the list of todos
     for (let task of list) {
